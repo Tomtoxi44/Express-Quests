@@ -10,6 +10,9 @@ const database = mysql.createPool({
     database: process.env.DB_NAME,
 })
 
+
+
+
 database
   .getConnection()
   .then(() => {
@@ -55,5 +58,8 @@ database
     .catch((err) =>{
         console.log(err);
     })
+
+
+
 
     module.exports = database;
