@@ -42,35 +42,50 @@ const updateUsers = (req, res) => {
 
 
 const getUsersById = (req, res) => {
-    const id = parseInt(req.params.id);
-    database
-      .query("select * from movies where id = ?", [id])
-      .then(([users]) => {
-        if (users[0] != null) {
-          res.json(users[0]);
-        } else {
-          res.status(404).send("Not Found");
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send("Error retrieving data from database");
-      });
-  };
-
-
-
-const getUsers = (req, res) => {
-    database
-    .query("select * from users")
+  const id = parseInt(req.params.id);
+  database
+    .query("select * from movies where id = ?", [id])
     .then(([users]) => {
-      res.json(users);
+      if (users[0] != null) {
+        res.json(users[0]);
+      } else {
+        res.status(404).send("Not Found");
+      }
     })
     .catch((err) => {
       console.error(err);
       res.status(500).send("Error retrieving data from database");
     });
-  };
+};
+
+const deleteUsers = (req, res) => {
+  const id = parseInt(req.params.id);
+  database
+    .query("delete from users where id = ?", [id])
+    .then(([result]) => {
+      if (result.affectedRows === 0) {
+        res.status(404).send("Not Found");
+      } else {
+        res.sendStatus(204);
+    }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error deleting the users");
+    });
+};
+
+const getUsers = (req, res) => {
+  database
+  .query("select * from users")
+  .then(([users]) => {
+    res.json(users);
+  })
+  .catch((err) => {
+    console.error(err);
+    res.status(500).send("Error retrieving data from database");
+  });
+};
 
 
   module.exports = {
@@ -78,4 +93,5 @@ const getUsers = (req, res) => {
     getUsersById,
     postUsers,
     updateUsers,
+    deleteUsers,
   };
