@@ -76,6 +76,16 @@ const deleteUsers = (req, res) => {
 };
 
 const getUsers = (req, res) => {
+  const sqlValues = [];
+
+  if (req.query.language != null) {
+    sql += " where language = ?";
+    sqlValues.push(req.query.language);
+  }
+  if (req.query.city != null) {
+    sql += " where city = ?";
+    sqlValues.push(req.query.city);
+  }
   database
   .query("select * from users")
   .then(([users]) => {
