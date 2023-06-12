@@ -1,13 +1,15 @@
 const database = require("./database")
 
 
+
+
 const postUsers = (req, res) => {
-  const { firstname, lastname, email, city, language } = req.body;
+  const { firstname, lastname, email, city, language, hashedPassword } = req.body;
 
   database
     .query(
-      "INSERT INTO users(firstname, lastname, email, city, language) VALUES (?, ?, ?, ?, ?)",
-      [firstname, lastname, email, city, language]
+      "INSERT INTO users(firstname, lastname, email, city, language, hashedPassword) VALUES (?, ?, ?, ?, ?, ?)",
+      [firstname, lastname, email, city, language, hashedPassword]
     )
     .then(([result]) => {
       res.location(`/api/users/${result.insertId}`).sendStatus(201);
@@ -44,7 +46,7 @@ const updateUsers = (req, res) => {
 const getUsersById = (req, res) => {
   const id = parseInt(req.params.id);
   database
-    .query("select * from movies where id = ?", [id])
+    .query("select firstname, lastname, email, city, language, id from movies where id = ?", [id])
     .then(([users]) => {
       if (users[0] != null) {
         res.json(users[0]);
@@ -87,7 +89,7 @@ const getUsers = (req, res) => {
     sqlValues.push(req.query.city);
   }
   database
-  .query("select * from users")
+  .query("select firstname, lastname, email, city, language, id from users")
   .then(([users]) => {
     res.json(users);
   })
